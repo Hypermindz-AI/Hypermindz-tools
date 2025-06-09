@@ -1,179 +1,309 @@
 # Hypermindz Tools
 
-A collection of tools by the Hypermindz for AI workflows, including CrewAI integrations.
-
-## Installation
-
-```bash
-pip install hypermindz-tools
-```
+A comprehensive toolkit for AI agents and automation workflows, featuring CrewAI integrations and advanced search capabilities.
 
 ## Features
 
-- **CrewAI Integration**: Tools specifically designed for CrewAI workflows
-- **RAG Search**: Semantic similarity search over vectorized datasets
-- **Easy Configuration**: Environment variable or direct parameter configuration
+- 🤖 **CrewAI Integration**: Advanced tools for AI agent workflows
+- 🔍 **RAG Search**: Retrieval-Augmented Generation search capabilities
+- 🛠️ **Developer Tools**: Complete development environment with code quality enforcement
+- 📊 **Testing**: Comprehensive test suite with coverage reporting
+- 🚀 **CI/CD**: Automated testing, building, and deployment
 
 ## Quick Start
 
-### Using the CrewAI Tool
-
-```python
-from hypermindz_tools.crewai import hypermindz_rag_search
-
-# Set environment variables
-# HYPERMINDZ_BASE_URL=https://api.hypermindz.com
-# HYPERMINDZ_DATASET_ID=your_dataset_id
-# HYPERMINDZ_RAG_API_KEY=your_api_key
-
-# Use the tool
-result = hypermindz_rag_search("Find datasets about climate change")
-print(result)
-```
-
-### Integration with CrewAI Agents
-
-```python
-from crewai import Agent, Task, Crew
-from hypermindz_tools.crewai import hypermindz_rag_search
-
-# Create an agent with the RAG search tool
-researcher = Agent(
-    role='Research Analyst',
-    goal='Find and analyze relevant datasets',
-    backstory='You are an expert at finding relevant information from large datasets.',
-    tools=[hypermindz_rag_search],
-    verbose=True
-)
-
-# Create a task
-research_task = Task(
-    description='Find datasets related to sustainable energy practices',
-    agent=researcher,
-    expected_output='A list of relevant datasets with descriptions'
-)
-
-# Create and run crew
-crew = Crew(
-    agents=[researcher],
-    tasks=[research_task],
-    verbose=2
-)
-
-result = crew.kickoff()
-```
-
-## Configuration
-
-### Environment Variables
-
-Set the following environment variables:
+### Installation
 
 ```bash
-export HYPERMINDZ_BASE_URL="https://api.hypermindz.com"
-export HYPERMINDZ_DATASET_ID="your_dataset_id"
-export HYPERMINDZ_RAG_API_KEY="your_api_key"
+# Install the package
+pip install hypermindz-tools
+
+# For development
+git clone https://github.com/yourusername/hypermindz-tools.git
+cd hypermindz-tools
+make setup-dev
 ```
-
-## API Reference
-
-### HypermindzRAGSearchTool
-
-#### Methods
-
-- `__init__(base_url=None, dataset_id=None, api_key=None)`: Initialize the tool
-- `search(query_text, timeout=30)`: Perform semantic search
-- `validate_config()`: Validate configuration
-
-#### Parameters
-
-- `base_url (str)`: Base URL of the Hypermindz API
-- `dataset_id (str)`: Dataset ID to search within (sent as 'id' parameter)
-- `api_key (str)`: API key for authentication
-- `query_text (str)`: Natural language query for semantic search
-- `timeout (int)`: Request timeout in seconds (default: 30)
-
-### hypermindz_rag_search
-
-Decorated function for direct use with CrewAI.
-
-#### Parameters
-
-- `query_text (str)`: Natural language query for semantic search
-
-#### Returns
-
-- `str`: Search results or error message
-
-## Examples
 
 ### Basic Usage
 
 ```python
-from hypermindz_tools.crewai import hypermindz_rag_search
+from hypermindz_tools.crewai import rag_search
 
-# Simple search
-result = hypermindz_rag_search("Datasets about global warming trends")
+# Example usage
+result = rag_search.search("your query here")
+print(result)
 ```
 
-## Request Format
+## Development Setup
 
-The tool makes requests in the following format:
-```
-GET {base_url}/search?query={your_query}&id={dataset_id}
-Authorization: Bearer {api_key}
-```
+### Prerequisites
 
-Example:
-```
-GET https://api.hypermindz.com/search?query=renewable+energy+datasets&id=energy_data_2023
-Authorization: Bearer your_api_key_here
-```
+- Python 3.10, 3.11, or 3.12
+- Git
+- Make (optional but recommended)
 
-## Requirements
-
-- Python >= 3.8
-- requests >= 2.25.0
-- crewai >= 0.1.0
-
-## Development
-
-### Setup Development Environment
+### Quick Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/Hypermindz-AI/Hypermindz-tools.git
+git clone https://github.com/yourusername/hypermindz-tools.git
 cd hypermindz-tools
 
+# Complete development setup (installs dependencies + pre-commit hooks)
+make setup-dev
+
+# Verify setup
+make info
+```
+
+### Manual Setup (if you don't have make)
+
+```bash
 # Install in development mode
 pip install -e .[dev]
+
+# Install pre-commit hooks
+pip install pre-commit
+pre-commit install
+
+# Verify setup
+pre-commit run --all-files
 ```
 
-### Running Tests
+## Development Workflow
+
+### Daily Development Commands
 
 ```bash
-pytest
+# Fix all formatting issues and run checks
+make fix-all
+
+# Quick development cycle (format → lint → type-check → test)
+make dev-cycle
+
+# Run tests only
+make test
+
+# Format code only
+make format
 ```
 
-### Code Formatting
+### Code Quality
+
+This project enforces high code quality standards through:
+
+- **Black**: Code formatting
+- **isort**: Import sorting
+- **flake8**: Linting and style checking
+- **mypy**: Type checking
+- **bandit**: Security scanning
+- **pytest**: Testing with coverage
+
+### Pre-commit Hooks
+
+Pre-commit hooks run automatically before each commit to ensure code quality:
 
 ```bash
-black hypermindz_tools/
-flake8 hypermindz_tools/
+# Hooks run automatically on git commit
+git add .
+git commit -m "Your changes"  # Hooks run here automatically
+
+# Run hooks manually
+make pre-commit-run
+
+# Update hook versions
+make pre-commit-update
 ```
 
-## License
+If pre-commit hooks fail:
+1. Issues are automatically fixed when possible (formatting)
+2. Manual fixes required for linting/type errors
+3. Run `make fix-all` to resolve most issues
+4. Commit again
 
-MIT License
+### Available Make Commands
+
+| Command | Description |
+|---------|-------------|
+| `make help` | Show all available commands |
+| `make install` | Install the package |
+| `make install-dev` | Install in development mode |
+| `make setup-dev` | Complete development environment setup |
+| `make test` | Run tests with coverage |
+| `make test-verbose` | Run tests with HTML coverage report |
+| `make lint` | Run linting checks |
+| `make format` | Format code with black and isort |
+| `make type-check` | Run mypy type checking |
+| `make security` | Run security checks with bandit |
+| `make check-all` | Run all quality checks |
+| `make fix-all` | Auto-fix formatting and run all checks |
+| `make dev-cycle` | Quick development cycle |
+| `make ci-check` | Simulate CI checks |
+| `make clean` | Clean build artifacts |
+| `make build` | Build distribution packages |
+| `make upload` | Upload to PyPI |
+| `make upload-test` | Upload to Test PyPI |
+| `make pre-commit-install` | Install pre-commit hooks |
+| `make pre-commit-run` | Run pre-commit on all files |
+| `make info` | Display project information |
+
+### Testing
+
+```bash
+# Run tests with coverage
+make test
+
+# Run tests with detailed HTML coverage report
+make test-verbose
+
+# View coverage report
+open htmlcov/index.html  # macOS
+xdg-open htmlcov/index.html  # Linux
+```
+
+### Building and Publishing
+
+```bash
+# Build distribution packages
+make build
+
+# Upload to Test PyPI (for testing)
+make upload-test
+
+# Upload to PyPI (production)
+make upload
+```
+
+## Project Structure
+
+```
+hypermindz-tools/
+├── .github/
+│   └── workflows/
+│       └── ci.yml              # CI/CD pipeline
+├── .pre-commit-config.yaml     # Pre-commit configuration
+├── hypermindz_tools/
+│   ├── __init__.py
+│   └── crewai/
+│       ├── __init__.py
+│       └── rag_search.py       # RAG search implementation
+├── tests/
+│   └── test_crewai/
+│       └── test_rag_search.py  # Test files
+├── Makefile                    # Development commands
+├── pyproject.toml             # Project configuration
+├── README.md                  # This file
+└── requirements-dev.txt       # Development dependencies
+```
+
+## Code Quality Standards
+
+### Formatting
+- **Line length**: 127 characters
+- **Code style**: Black formatter
+- **Import sorting**: isort with Black profile
+
+### Linting
+- **Complexity**: Maximum 10
+- **Type hints**: Required for public APIs
+- **Docstrings**: Required for public functions
+
+### Testing
+- **Minimum coverage**: 80%
+- **Test location**: `tests/` directory
+- **Naming**: `test_*.py` files
+
+## CI/CD Pipeline
+
+The project uses GitHub Actions for:
+
+- ✅ **Multi-version testing**: Python 3.10, 3.11, 3.12
+- ✅ **Code quality checks**: Linting, formatting, type checking
+- ✅ **Security scanning**: Bandit security checks
+- ✅ **Test coverage**: Pytest with coverage reporting
+- ✅ **Automated building**: Distribution packages
+- ✅ **Automated publishing**: PyPI releases on tags
+
+### CI Pipeline Triggers
+
+- **Push**: `main` and `dev` branches
+- **Pull Request**: `main` branch
+- **Release**: Git tags starting with `v*`
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Development Process
 
-## Support
+1. **Fork** the repository
+2. **Clone** your fork: `git clone https://github.com/yourusername/hypermindz-tools.git`
+3. **Setup** development environment: `make setup-dev`
+4. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+5. **Develop** your feature
+6. **Test** your changes: `make fix-all`
+7. **Commit** your changes (pre-commit hooks will run)
+8. **Push** to your fork: `git push origin feature/amazing-feature`
+9. **Create** a Pull Request
 
-For issues and questions, please open an issue on GitHub.
+### Code Style Guidelines
+
+- Follow PEP 8 (enforced by flake8)
+- Use type hints for function signatures
+- Write docstrings for public functions
+- Keep functions focused and small
+- Write tests for new functionality
+
+### Pull Request Process
+
+1. Ensure all tests pass: `make check-all`
+2. Update documentation if needed
+3. Add tests for new functionality
+4. Ensure CI pipeline passes
+5. Request review from maintainers
+
+## Troubleshooting
+
+### Common Issues
+
+**Pre-commit hooks fail**:
+```bash
+make fix-all  # Auto-fix most issues
+```
+
+**Import errors in tests**:
+```bash
+pip install -e .[dev]  # Reinstall in development mode
+```
+
+**Coverage too low**:
+```bash
+make test-verbose  # See detailed coverage report
+```
+
+**Type checking errors**:
+```bash
+make type-check  # Run mypy separately
+```
+
+### Getting Help
+
+- **Issues**: [GitHub Issues](https://github.com/yourusername/hypermindz-tools/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/hypermindz-tools/discussions)
+- **Documentation**: [Project Wiki](https://github.com/yourusername/hypermindz-tools/wiki)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes and version history.
+
+## Acknowledgments
+
+- CrewAI team for the amazing framework
+- Contributors and maintainers
+- Open source community
+
+---
+
+**Made with ❤️ by the Hypermindz team**
