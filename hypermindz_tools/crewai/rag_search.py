@@ -20,16 +20,26 @@ class HypermindzRAGSearchTool:
     to retrieve contextually relevant entries based on user queries.
     """
     
-    def __init__(self, api_url: Optional[str] = None, api_key: Optional[str] = None):
+    def __init__(self, base_url: Optional[str] = None, dataset_id: Optional[str] = None, api_key: Optional[str] = None):
         """
         Initialize the RAG Search Tool.
         
         Args:
-            api_url (Optional[str]): The API URL. If None, reads from HYPERMINDZ_RAG_URL env var.
+            base_url (Optional[str]): The base API URL. If None, reads from HYPERMINDZ_BASE_URL env var.
+            dataset_id (Optional[str]): The dataset ID. If None, reads from HYPERMINDZ_DATASET_ID env var.
             api_key (Optional[str]): The API key. If None, reads from HYPERMINDZ_RAG_API_KEY env var.
         """
-        self.api_url = api_url or os.getenv("HYPERMINDZ_RAG_URL")
+        self.base_url = base_url or os.getenv("HYPERMINDZ_BASE_URL")
+        self.dataset_id = dataset_id or os.getenv("HYPERMINDZ_DATASET_ID")
         self.api_key = api_key or os.getenv("HYPERMINDZ_RAG_API_KEY")
+        
+        # Construct the API URL (without dataset ID in path)
+        if self.base_url:
+            # Remove trailing slash from base_url if present
+            self.base_url = self.base_url.rstrip('/')
+            self.api_url = f"{self.base_url}/search"
+        else:
+            self.api_url = None
     
     def validate_config(self) -> tuple[bool, str]:
         """
@@ -38,8 +48,10 @@ class HypermindzRAGSearchTool:
         Returns:
             tuple[bool, str]: (is_valid, error_message)
         """
-        if not self.api_url:
-            return False, "Error: HYPERMINDZ_RAG_URL not provided or environment variable not set"
+        if not self.base_url:
+            return False, "Error: HYPERMINDZ_BASE_URL not provided or environment variable not set"
+        if not self.dataset_id:
+            return False, "Error: HYPERMINDZ_DATASET_ID not provided or environment variable not set"
         if not self.api_key:
             return False, "Error: HYPERMINDZ_RAG_API_KEY not provided or environment variable not set"
         return True, ""
@@ -61,7 +73,10 @@ class HypermindzRAGSearchTool:
             return error_msg
         
         try:
-            params = {"query": query_text}
+            params = {
+                "query": query_text,
+                "id": self.dataset_id
+            }
             headers = {"Authorization": f"Bearer {self.api_key}"}
             
             response = requests.get(
@@ -107,10 +122,22 @@ def hypermindz_rag_search(query_text: str) -> str:
 
     Notes:
         - Optimized for semantic search in production RAG workflows.
-        - Targets a specific dataset collection identified by `collection_id = "json_test"` or by query params.
+        - Uses HYPERMINDZ_BASE_URL for the API endpoint and sends HYPERMINDZ_DATASET_ID as 'id' parameter.
         - Results depend on the clarity and specificity of the query provided.
 
+    Environment Variables Required:
+        - HYPERMINDZ_BASE_URL: The base URL of the Hypermindz API (e.g., https://api.hypermindz.com)
+        - HYPERMINDZ_DATASET_ID: The specific dataset ID to search within (sent as 'id' parameter)
+        - HYPERMINDZ_RAG_API_KEY: The API key for authentication
+
     Example:
+        # Set environment variables:
+        # HYPERMINDZ_BASE_URL=https://api.hypermindz.com
+        # HYPERMINDZ_DATASET_ID=climate_data_2023
+        # HYPERMINDZ_RAG_API_KEY=your_api_key_here
+        
+        # The tool will make a request to: https://api.hypermindz.com/search?query=your_query&id=climate_data_2023
+        
         query_text = "Datasets about global energy consumption trends from the past decade"
         result = hypermindz_rag_search(query_text)
     """

@@ -22,7 +22,8 @@ pip install hypermindz-tools
 from hypermindz_tools.crewai import hypermindz_rag_search
 
 # Set environment variables
-# HYPERMINDZ_RAG_URL=your_api_url
+# HYPERMINDZ_BASE_URL=https://api.hypermindz.com
+# HYPERMINDZ_DATASET_ID=your_dataset_id
 # HYPERMINDZ_RAG_API_KEY=your_api_key
 
 # Use the tool
@@ -69,10 +70,10 @@ result = crew.kickoff()
 Set the following environment variables:
 
 ```bash
-export HYPERMINDZ_RAG_URL="https://your-api-endpoint.com"
-export HYPERMINDZ_RAG_API_KEY="your-api-key"
+export HYPERMINDZ_BASE_URL="https://api.hypermindz.com"
+export HYPERMINDZ_DATASET_ID="your_dataset_id"
+export HYPERMINDZ_RAG_API_KEY="your_api_key"
 ```
-
 
 ## API Reference
 
@@ -80,12 +81,15 @@ export HYPERMINDZ_RAG_API_KEY="your-api-key"
 
 #### Methods
 
-- `__init__(api_url=None, api_key=None)`: Initialize the tool
+- `__init__(base_url=None, dataset_id=None, api_key=None)`: Initialize the tool
 - `search(query_text, timeout=30)`: Perform semantic search
 - `validate_config()`: Validate configuration
 
 #### Parameters
 
+- `base_url (str)`: Base URL of the Hypermindz API
+- `dataset_id (str)`: Dataset ID to search within (sent as 'id' parameter)
+- `api_key (str)`: API key for authentication
 - `query_text (str)`: Natural language query for semantic search
 - `timeout (int)`: Request timeout in seconds (default: 30)
 
@@ -112,6 +116,19 @@ from hypermindz_tools.crewai import hypermindz_rag_search
 result = hypermindz_rag_search("Datasets about global warming trends")
 ```
 
+## Request Format
+
+The tool makes requests in the following format:
+```
+GET {base_url}/search?query={your_query}&id={dataset_id}
+Authorization: Bearer {api_key}
+```
+
+Example:
+```
+GET https://api.hypermindz.com/search?query=renewable+energy+datasets&id=energy_data_2023
+Authorization: Bearer your_api_key_here
+```
 
 ## Requirements
 
@@ -125,7 +142,7 @@ result = hypermindz_rag_search("Datasets about global warming trends")
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/hypermindz-tools.git
+git clone https://github.com/Hypermindz-AI/Hypermindz-tools.git
 cd hypermindz-tools
 
 # Install in development mode
