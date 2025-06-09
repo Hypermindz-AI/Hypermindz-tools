@@ -89,7 +89,9 @@ class HypermindzRAGSearchTool:
             params = {"query": query_text, "id": self.dataset_id}
             headers = {"Authorization": f"Bearer {self.api_key}"}
 
-            response = requests.get(self.api_url, params=params, headers=headers, timeout=timeout)
+            response = requests.get(
+                self.api_url, params=params, headers=headers, timeout=timeout
+            )
             response.raise_for_status()
 
             # Parse and return results
@@ -106,7 +108,7 @@ class HypermindzRAGSearchTool:
 
 
 # CrewAI tool decorator version
-@tool("Hypermindz RAG Search Tool") # type: ignore[misc]
+@tool("Hypermindz RAG Search Tool")  # type: ignore[misc]
 def hypermindz_rag_search(query_text: str) -> str:
     """
     Performs a semantic similarity search over a vectorized dataset collection to retrieve the most

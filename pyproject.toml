@@ -118,3 +118,7 @@ exclude_lines = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
 ]
+
+[tool.isort]
+profile = "black"
+line_length = 88

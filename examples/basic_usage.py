@@ -11,7 +11,9 @@ def main():
     # Method 1: Using the decorated function
     print("1. Using the decorated function:")
     try:
-        result = hypermindz_rag_search("Find datasets about climate change and global warming")
+        result = hypermindz_rag_search(
+            "Find datasets about climate change and global warming"
+        )
         print(f"Result: {result}\n")
     except Exception as e:
         print(f"Error: {e}\n")
@@ -39,7 +41,9 @@ def main():
     print("3. Using the tool class with direct parameters:")
     try:
         # You would replace these with your actual API details
-        tool = HypermindzRAGSearchTool(api_url="https://your-api-endpoint.com", api_key="your-api-key")
+        tool = HypermindzRAGSearchTool(
+            api_url="https://your-api-endpoint.com", api_key="your-api-key"
+        )
 
         result = tool.search("Find research papers on artificial intelligence")
         print(f"Result: {result}\n")
