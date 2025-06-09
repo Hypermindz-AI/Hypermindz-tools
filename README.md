@@ -30,25 +30,6 @@ result = hypermindz_rag_search("Find datasets about climate change")
 print(result)
 ```
 
-### Using the Tool Class
-
-```python
-from hypermindz_tools.crewai import HypermindzRAGSearchTool
-
-# Initialize with parameters
-tool = HypermindzRAGSearchTool(
-    api_url="https://your-api-endpoint.com",
-    api_key="your-api-key"
-)
-
-# Or use environment variables
-tool = HypermindzRAGSearchTool()
-
-# Perform search
-result = tool.search("Find datasets about renewable energy")
-print(result)
-```
-
 ### Integration with CrewAI Agents
 
 ```python
@@ -92,16 +73,6 @@ export HYPERMINDZ_RAG_URL="https://your-api-endpoint.com"
 export HYPERMINDZ_RAG_API_KEY="your-api-key"
 ```
 
-### Direct Configuration
-
-```python
-from hypermindz_tools.crewai import HypermindzRAGSearchTool
-
-tool = HypermindzRAGSearchTool(
-    api_url="https://your-api-endpoint.com",
-    api_key="your-api-key"
-)
-```
 
 ## API Reference
 
@@ -141,21 +112,6 @@ from hypermindz_tools.crewai import hypermindz_rag_search
 result = hypermindz_rag_search("Datasets about global warming trends")
 ```
 
-### Advanced Usage with Error Handling
-
-```python
-from hypermindz_tools.crewai import HypermindzRAGSearchTool
-
-tool = HypermindzRAGSearchTool()
-
-# Validate configuration
-is_valid, error_msg = tool.validate_config()
-if not is_valid:
-    print(f"Configuration error: {error_msg}")
-else:
-    result = tool.search("Find climate data from 2020-2023")
-    print(result)
-```
 
 ## Requirements
 
